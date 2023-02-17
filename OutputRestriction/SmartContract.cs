@@ -3,27 +3,18 @@ using OX.SmartContract.Framework;
 using System;
 using System.Numerics;
 using System.Linq;
+using System.Runtime.Serialization;
 
 namespace OX.SmartContract
 {
     public class OutputRestriction : OX.SmartContract.Framework.SmartContract
     {
-        public static bool Main(object[] scriptHashes, byte[] pubkey, byte[] signature)
+        public static bool Main(byte[] sh1, byte[] sh2, byte[] sh3, byte[] sh4, byte[] sh5, byte[] pubkey, byte[] signature)
         {
-            //var contractSH = OX.SmartContract.Framework.Services.System.ExecutionEngine.ExecutingScriptHash;
             Transaction tx = OX.SmartContract.Framework.Services.System.ExecutionEngine.ScriptContainer as Transaction;
             foreach (var output in tx.GetOutputs())
             {
-                bool ok = false;
-                foreach (var sh in scriptHashes)
-                {
-                    byte[] bs = (byte[])sh;
-                    if (Equals(bs, output.ScriptHash))
-                    {
-                        ok = true;
-                        break;
-                    }
-                }
+                var ok = Equals(sh1, output.ScriptHash) || Equals(sh2, output.ScriptHash) || Equals(sh3, output.ScriptHash) || Equals(sh4, output.ScriptHash) || Equals(sh5, output.ScriptHash);
                 if (!ok) return false;
             }
             return VerifySignature(signature, pubkey);
@@ -32,7 +23,11 @@ namespace OX.SmartContract
         {
             if (A.Length != B.Length)
                 return false;
-            return A.SequenceEqual(B);
+            for (int i = 0; i < A.Length; i++)
+            {
+                if (A[i] != B[i]) return false;
+            }
+            return true;
         }
     }
 }
