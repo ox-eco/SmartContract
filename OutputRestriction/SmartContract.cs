@@ -9,12 +9,22 @@ namespace OX.SmartContract
 {
     public class OutputRestriction : OX.SmartContract.Framework.SmartContract
     {
-        public static bool Main(byte[] sh1, byte[] sh2, byte[] sh3, byte[] sh4, byte[] sh5, byte[] pubkey, byte[] signature)
+        public static bool Main(object[] scriptHashes, byte[] pubkey, byte[] signature)
         {
+            //var contractSH = OX.SmartContract.Framework.Services.System.ExecutionEngine.ExecutingScriptHash;
             Transaction tx = OX.SmartContract.Framework.Services.System.ExecutionEngine.ScriptContainer as Transaction;
             foreach (var output in tx.GetOutputs())
             {
-                var ok = Equals(sh1, output.ScriptHash) || Equals(sh2, output.ScriptHash) || Equals(sh3, output.ScriptHash) || Equals(sh4, output.ScriptHash) || Equals(sh5, output.ScriptHash);
+                bool ok = false;
+                foreach (var sh in scriptHashes)
+                {
+                    byte[] bs = (byte[])sh;
+                    if (Equals(sh, output.ScriptHash))
+                    {
+                        ok = true;
+                        break;
+                    }
+                }
                 if (!ok) return false;
             }
             return VerifySignature(signature, pubkey);
