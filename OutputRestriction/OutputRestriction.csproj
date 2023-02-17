@@ -7,7 +7,7 @@
     <Authors>OX</Authors>
     <TargetFramework>net6.0</TargetFramework>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <AssemblyName>lock</AssemblyName>
+    <AssemblyName>OutputRestriction</AssemblyName>
     <PackageId>OX.SmartContract.OutputRestriction</PackageId>
     <PackageTags></PackageTags>
     <PackageProjectUrl></PackageProjectUrl>
