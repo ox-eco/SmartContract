@@ -7,6 +7,9 @@ using System.Runtime.Serialization;
 
 namespace OX.SmartContract
 {
+    /// <summary>
+    /// Contract Script Hash:0x3cb77ec580d6c1272dc670f63e707870e2d58369
+    /// </summary>
     public class OutputRestriction : OX.SmartContract.Framework.SmartContract
     {
         public static bool Main(object[] scriptHashes, byte[] pubkey, byte[] signature)
