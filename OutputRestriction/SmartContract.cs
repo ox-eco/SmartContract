@@ -8,7 +8,7 @@ namespace OX.SmartContract
 {
     public class OutputRestriction : OX.SmartContract.Framework.SmartContract
     {
-        public static bool Main(byte[][] scriptHashes, byte[] pubkey, byte[] signature)
+        public static bool Main(object[] scriptHashes, byte[] pubkey, byte[] signature)
         {
             //var contractSH = OX.SmartContract.Framework.Services.System.ExecutionEngine.ExecutingScriptHash;
             Transaction tx = OX.SmartContract.Framework.Services.System.ExecutionEngine.ScriptContainer as Transaction;
@@ -17,7 +17,8 @@ namespace OX.SmartContract
                 bool ok = false;
                 foreach (var sh in scriptHashes)
                 {
-                    if (Equals(sh, output.ScriptHash))
+                    byte[] bs = (byte[])sh;
+                    if (Equals(bs, output.ScriptHash))
                     {
                         ok = true;
                         break;
