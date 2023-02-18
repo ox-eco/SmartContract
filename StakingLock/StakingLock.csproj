@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Copyright>2020 OX</Copyright>
+    <AssemblyTitle>stakinglock</AssemblyTitle>
+    <Version>1.0.2</Version>
+    <Authors>OX</Authors>
+    <TargetFramework>net6.0</TargetFramework>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AssemblyName>stakinglock</AssemblyName>
+    <PackageId>OX.SmartContract.StakingLock</PackageId>
+    <PackageTags></PackageTags>
+    <PackageProjectUrl></PackageProjectUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl></RepositoryUrl>
+    <RootNamespace>OX</RootNamespace>
+    <Company>The OX Project</Company>
+    <Description>OX</Description>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>C:\ox</OutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>c:\ox</OutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="OX.SmartContract.Framework">
+      <HintPath>C:\ox\net6.0\OX.SmartContract.Framework.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>
