@@ -9,7 +9,7 @@ using System.Text;
 namespace OX.SmartContract
 {
     /// <summary>
-    /// Contract Script Hash:
+    /// Contract Script Hash:0xb943583d6f88cab153ce07dff0c465114dfd32f2
     /// </summary>
     public class StakingLock : OX.SmartContract.Framework.SmartContract
     {
@@ -49,7 +49,7 @@ namespace OX.SmartContract
                 }
                 else if (LockStakingType == 3)
                 {
-                    if (LockHash == default) return false;
+                    //if (LockHash == default) return false;
                     Transaction tx = OX.SmartContract.Framework.Services.System.ExecutionEngine.ScriptContainer as Transaction;
                     var attrs = tx.GetAttributes();
                     foreach (var attr in attrs)
