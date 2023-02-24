@@ -8,11 +8,11 @@ using System.Runtime.Serialization;
 namespace OX.SmartContract
 {
     /// <summary>
-    /// Contract Script Hash:0x3cb77ec580d6c1272dc670f63e707870e2d58369
+    /// Contract Script Hash:0xd40366e69152f6b6538c2a45beba73c18a4e3b6d
     /// </summary>
     public class OutputRestriction : OX.SmartContract.Framework.SmartContract
     {
-        public static bool Main(object[] scriptHashes, byte[] pubkey, byte[] signature)
+        public static bool Main(object[] scriptHashes, byte[] ownerPubKey, byte[] pubkey, byte[] signature)
         {
             //var contractSH = OX.SmartContract.Framework.Services.System.ExecutionEngine.ExecutingScriptHash;
             Transaction tx = OX.SmartContract.Framework.Services.System.ExecutionEngine.ScriptContainer as Transaction;
@@ -29,6 +29,13 @@ namespace OX.SmartContract
                     }
                 }
                 if (!ok) return false;
+            }
+            foreach (var attr in tx.GetAttributes())
+            {
+                if (attr.Usage == 0xff)
+                {
+                    if (!Equals(attr.Data, ownerPubKey)) return false;
+                }
             }
             return VerifySignature(signature, pubkey);
         }
