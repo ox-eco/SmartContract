@@ -9,11 +9,11 @@ using System.Collections.Generic;
 namespace OX.SmartContract
 {
     /// <summary>
-    /// Contract Script Hash:0x231d923d9d39834b3e3ccf9c9ad34f587ec68eac
+    /// Contract Script Hash:0xf7f5a79f40336f1e9bf9ee9bef93651eaab9f04e
     /// </summary>
     public class OutputRestriction : OX.SmartContract.Framework.SmartContract
     {
-        public static bool Main(byte[] scriptHashes, byte[] ownerPubKey, byte[] pubkey, byte[] signature)
+        public static bool Main(bool mustFlag, byte[] scriptHashes, byte[] ownerPubKey, byte[] pubkey, byte[] signature)
         {
             Transaction tx = OX.SmartContract.Framework.Services.System.ExecutionEngine.ScriptContainer as Transaction;
             var c = scriptHashes.Length / 20;
@@ -31,12 +31,21 @@ namespace OX.SmartContract
                 }
                 if (!ok) return false;
             }
-            foreach (var attr in tx.GetAttributes())
+            if (mustFlag)
             {
-                if (attr.Usage == 0xff)
+                bool flaged = false;
+                foreach (var attr in tx.GetAttributes())
                 {
-                    if (attr.Data.AsString() != ownerPubKey.AsString()) return false;
+                    if (attr.Usage == 0xff)
+                    {
+                        if (attr.Data.AsString() != ownerPubKey.AsString())
+                        {
+                            return false;
+                        }
+                        flaged = true;
+                    }
                 }
+                if (!flaged) return false;
             }
             return VerifySignature(signature, pubkey);
         }
