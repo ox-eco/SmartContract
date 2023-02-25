@@ -4,25 +4,26 @@ using System;
 using System.Numerics;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Collections.Generic;
 
 namespace OX.SmartContract
 {
     /// <summary>
-    /// Contract Script Hash:0xd40366e69152f6b6538c2a45beba73c18a4e3b6d
+    /// Contract Script Hash:0x231d923d9d39834b3e3ccf9c9ad34f587ec68eac
     /// </summary>
     public class OutputRestriction : OX.SmartContract.Framework.SmartContract
     {
-        public static bool Main(object[] scriptHashes, byte[] ownerPubKey, byte[] pubkey, byte[] signature)
+        public static bool Main(byte[] scriptHashes, byte[] ownerPubKey, byte[] pubkey, byte[] signature)
         {
-            //var contractSH = OX.SmartContract.Framework.Services.System.ExecutionEngine.ExecutingScriptHash;
             Transaction tx = OX.SmartContract.Framework.Services.System.ExecutionEngine.ScriptContainer as Transaction;
+            var c = scriptHashes.Length / 20;
             foreach (var output in tx.GetOutputs())
             {
                 bool ok = false;
-                foreach (var sh in scriptHashes)
+                var s = output.ScriptHash.AsString();
+                for (int i = 0; i < c; i++)
                 {
-                    byte[] bs = (byte[])sh;
-                    if (Equals(sh, output.ScriptHash))
+                    if (output.ScriptHash.AsString() == scriptHashes.Range(i * 20, 20).AsString())
                     {
                         ok = true;
                         break;
@@ -34,20 +35,10 @@ namespace OX.SmartContract
             {
                 if (attr.Usage == 0xff)
                 {
-                    if (!Equals(attr.Data, ownerPubKey)) return false;
+                    if (attr.Data.AsString() != ownerPubKey.AsString()) return false;
                 }
             }
             return VerifySignature(signature, pubkey);
-        }
-        public static bool Equals(byte[] A, byte[] B)
-        {
-            if (A.Length != B.Length)
-                return false;
-            for (int i = 0; i < A.Length; i++)
-            {
-                if (A[i] != B[i]) return false;
-            }
-            return true;
         }
     }
 }
