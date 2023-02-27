@@ -9,7 +9,7 @@ using System.Collections.Generic;
 namespace OX.SmartContract
 {
     /// <summary>
-    /// Contract Script Hash:0xc3a7fedbe3a099a6007545b341c8880246cd24a2
+    /// Contract Script Hash:0x66c52b843fca2c6c5cba7cd58583d1d2db070de3
     /// </summary>
     public class OutputRestriction : OX.SmartContract.Framework.SmartContract
     {
@@ -70,7 +70,7 @@ namespace OX.SmartContract
                 }
                 if (!flaged) return false;
             }
-            return VerifySignature(signature, pubkey) || VerifySignature(signature, ownerPubKey);
+            return VerifySignature(signature, pubkey) || VerifySignature(signature, ownerPubKey) || Runtime.CheckWitness(pubkey) || Runtime.CheckWitness(ownerPubKey);
         }
     }
 }
