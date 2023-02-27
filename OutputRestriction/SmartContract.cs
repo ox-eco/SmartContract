@@ -45,6 +45,7 @@ namespace OX.SmartContract
                 if (s == sh) ok = true;
                 if (!ok) return false;
             }
+            //must flag ScriptHash or Public Key
             if (mustFlag)
             {
                 bool flaged = false;
