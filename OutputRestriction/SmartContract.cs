@@ -9,7 +9,7 @@ using System.Collections.Generic;
 namespace OX.SmartContract
 {
     /// <summary>
-    /// Contract Script Hash:0x778baab59d16500b10afd3c6bacd86230850a434
+    /// Contract Script Hash:0xc3a7fedbe3a099a6007545b341c8880246cd24a2
     /// </summary>
     public class OutputRestriction : OX.SmartContract.Framework.SmartContract
     {
@@ -53,6 +53,14 @@ namespace OX.SmartContract
                     if (attr.Usage == 0xff)
                     {
                         if (attr.Data.AsString() != ownerPubKey.AsString())
+                        {
+                            return false;
+                        }
+                        flaged = true;
+                    }
+                    if (attr.Usage == 0xfe)
+                    {
+                        if (attr.Data.AsString() != sh)
                         {
                             return false;
                         }
