@@ -30,7 +30,7 @@
 
   <ItemGroup>
     <Reference Include="OX.SmartContract.Framework">
-      <HintPath>C:\ox\net6.0\OX.SmartContract.Framework.dll</HintPath>
+      <HintPath>C:\ox\Debug\net6.0\OX.SmartContract.Framework.dll</HintPath>
     </Reference>
   </ItemGroup>
 </Project>
