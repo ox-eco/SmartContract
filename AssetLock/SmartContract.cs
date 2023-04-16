@@ -6,11 +6,11 @@ using System.Numerics;
 namespace OX.SmartContract
 {
     /// <summary>
-    /// Contract Script Hash:0x334b191cca29463a62ef69b790e015b2f7467383
+    /// Contract Script Hash:0x41a48aa8f3982151136eeeabbfa97ec9b3f56b5a
     /// </summary>
     public class Lock : OX.SmartContract.Framework.SmartContract
     {
-        public static bool Main(bool isTimeLock, uint lockExpiration, byte[] pubkey, byte[] signature)
+        public static bool Main(bool isTimeLock, uint lockExpiration, int Flag, byte[] pubkey, byte[] signature)
         {
             if (isTimeLock)
             {
@@ -21,7 +21,7 @@ namespace OX.SmartContract
             {
                 if (lockExpiration > Blockchain.GetHeight()) return false;
             }
-            return VerifySignature(signature, pubkey);
+            return VerifySignature(signature, pubkey) || Runtime.CheckWitness(pubkey);
         }
     }
 }
