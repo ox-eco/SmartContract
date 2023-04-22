@@ -29,6 +29,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="SmartContract - 复制.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="OX.SmartContract.Framework">
       <HintPath>C:\ox\Debug\net6.0\OX.SmartContract.Framework.dll</HintPath>
     </Reference>

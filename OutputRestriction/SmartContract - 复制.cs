@@ -10,7 +10,7 @@ using System.Runtime.Intrinsics.X86;
 namespace OX.SmartContract
 {
     /// <summary>
-    /// Contract Script Hash:0xd01821550f57efa7b04d1af24206fb7377cec8b3
+    /// Contract Script Hash:0x0f23223738f58f8aabe8da81d0029c65e3a76d25
     /// </summary>
     public class OutputRestriction : OX.SmartContract.Framework.SmartContract
     {
@@ -32,8 +32,26 @@ namespace OX.SmartContract
                         return false;
                     }
                 }
+                byte[] bs = new byte[0];
+                if (sideScopes != default && sideScopes.Length > 0)
+                {
+                    var k = sideScopes.Length / 20;
+                    for (int i = 0; i < k; i++)
+                    {
+                        var sideScriptHash = sideScopes.Range(i * 20, 20);
+                        bs = bs.Concat(sideScriptHash);
+                        var sshs = Blockchain.GetSides(sideScriptHash, "0x1bb1483c8c1175b37062d7d586bd4b67abb255e2");
+                        if (sshs != default && sshs.Length > 0)
+                        {
+                            foreach (var ssh in sshs)
+                            {
+                                bs = bs.Concat(ssh);
+                            }
+                        }
+                    }
+                }
                 var c = targets != default ? targets.Length / 20 : 0;
-                var m = sideScopes != default ? sideScopes.Length / 20 : 0;
+                var m = bs != default ? bs.Length / 20 : 0;
                 foreach (var output in tx.GetOutputs())
                 {
                     bool ok = false;
@@ -53,7 +71,7 @@ namespace OX.SmartContract
                     {
                         for (int i = 0; i < m; i++)
                         {
-                            if (Blockchain.IsInSide(output.ScriptHash, sideScopes.Range(i * 20, 20), "0x1bb1483c8c1175b37062d7d586bd4b67abb255e2"))
+                            if (s == bs.Range(i * 20, 20).AsString())
                             {
                                 ok = true;
                                 break;
