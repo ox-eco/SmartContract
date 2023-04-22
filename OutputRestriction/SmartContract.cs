@@ -10,7 +10,7 @@ using System.Runtime.Intrinsics.X86;
 namespace OX.SmartContract
 {
     /// <summary>
-    /// Contract Script Hash:0xf45d38f34248e4f4cd81785f5d096c1a336b68c6
+    /// Contract Script Hash:0x0f23223738f58f8aabe8da81d0029c65e3a76d25
     /// </summary>
     public class OutputRestriction : OX.SmartContract.Framework.SmartContract
     {
@@ -32,24 +32,26 @@ namespace OX.SmartContract
                         return false;
                     }
                 }
-                //List<byte[]> bs = new List<byte[]>();
                 byte[] bs = new byte[0];
                 if (sideScopes != default && sideScopes.Length > 0)
                 {
                     var k = sideScopes.Length / 20;
                     for (int i = 0; i < k; i++)
                     {
-                        var sideScriptHash = targets.Range(i * 20, 20);
+                        var sideScriptHash = sideScopes.Range(i * 20, 20);
                         bs.Concat(sideScriptHash);
                         var sshs = Blockchain.GetSides(sideScriptHash, "0x1bb1483c8c1175b37062d7d586bd4b67abb255e2");
-                        foreach (var ssh in sshs)
+                        if (sshs != default && sshs.Length > 0)
                         {
-                            bs = bs.Concat(ssh);
+                            foreach (var ssh in sshs)
+                            {
+                                bs = bs.Concat(ssh);
+                            }
                         }
                     }
                 }
-                var c = targets.Length / 20;
-                var m = bs.Length / 20;
+                var c = targets != default ? targets.Length / 20 : 0;
+                var m = bs != default ? bs.Length / 20 : 0;
                 foreach (var output in tx.GetOutputs())
                 {
                     bool ok = false;
