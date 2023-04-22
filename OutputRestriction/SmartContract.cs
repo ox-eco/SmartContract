@@ -10,7 +10,7 @@ using System.Runtime.Intrinsics.X86;
 namespace OX.SmartContract
 {
     /// <summary>
-    /// Contract Script Hash:0x81f1f7cb058c498e68e74ab813d1c377af36d209
+    /// Contract Script Hash:0xf45d38f34248e4f4cd81785f5d096c1a336b68c6
     /// </summary>
     public class OutputRestriction : OX.SmartContract.Framework.SmartContract
     {
