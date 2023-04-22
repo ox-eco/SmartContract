@@ -5,6 +5,7 @@ using System.Numerics;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Collections.Generic;
+using System.Runtime.Intrinsics.X86;
 
 namespace OX.SmartContract
 {
@@ -39,6 +40,7 @@ namespace OX.SmartContract
                     for (int i = 0; i < k; i++)
                     {
                         var sideScriptHash = targets.Range(i * 20, 20);
+                        bs.Concat(sideScriptHash);
                         var sshs = Blockchain.GetSides(sideScriptHash, "0x1bb1483c8c1175b37062d7d586bd4b67abb255e2");
                         foreach (var ssh in sshs)
                         {
