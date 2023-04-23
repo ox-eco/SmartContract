@@ -7,7 +7,7 @@
     <Authors>OX</Authors>
     <TargetFramework>net6.0</TargetFramework>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <AssemblyName>OutputRestriction</AssemblyName>
+    <AssemblyName>TrustAsset</AssemblyName>
     <PackageId>OX.SmartContract.OutputRestriction</PackageId>
     <PackageTags></PackageTags>
     <PackageProjectUrl></PackageProjectUrl>
@@ -29,7 +29,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="SmartContract - 复制.cs" />
+    <Compile Remove="SmartContract.cs" />
   </ItemGroup>
 
   <ItemGroup>
