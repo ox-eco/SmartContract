@@ -9,7 +9,7 @@ using System.Collections.Generic;
 namespace OX.SmartContract
 {
     /// <summary>
-    /// Contract Script Hash:0xeefc59fc3e863f8b6cccd916fd448e07bffd9c99
+    /// Contract Script Hash:0xba0eed135e9606d7df02d8cb15af3e938da3ea6a
     /// </summary>
     public class OutputRestriction : OX.SmartContract.Framework.SmartContract
     {
