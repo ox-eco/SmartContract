@@ -24,7 +24,7 @@ namespace OX.SmartContract
                 {
                     if (attr.Usage == 0xfd)
                     {
-                        var ethAddress = Ethereum.EncodeUTF8AndEcRecover(tx.InputHash.AsString(), attr.Data.AsString());
+                        var ethAddress = Ethereum.EcRecover(tx.InputHash, attr.Data);
                         if (ethAddress != null && ethAddress.Length > 0 && ethAddress == ethereumAddress) return true;
                     }
                 }
