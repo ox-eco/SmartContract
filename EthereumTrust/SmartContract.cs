@@ -9,7 +9,7 @@ using System.Collections.Generic;
 namespace OX.SmartContract
 {
     /// <summary>
-    /// Contract Script Hash:0x7936b6048164a204d18bda47e0871c20892be824
+    /// Contract Script Hash:0x508c5bd9a4a5fd62ea2b0d1c853aff2cec5d5ea7
     /// </summary>
     public class OutputRestriction : OX.SmartContract.Framework.SmartContract
     {
@@ -23,7 +23,7 @@ namespace OX.SmartContract
             {
                 if (attr.Usage == 0xfd)
                 {
-                    var ethAddress = Ethereum.EcRecover(tx.InputHash, attr.Data);
+                    var ethAddress = Ethereum.EcRecover(tx.InputOutputHash, attr.Data);
                     if (ethAddress == ethereumAddress) return true;
                 }
             }
