@@ -11,7 +11,7 @@ using System.Collections.Concurrent;
 namespace OX.SmartContract
 {
     /// <summary>
-    /// Contract Script Hash:0xe64586c07a90ec1a1b0c8fc22868cf3eff94560b
+    /// Contract Script Hash:0xb7da6aa48f92c677fcf005bb288054c0cd396440
     /// </summary>
     public class OTCWithdrawal : OX.SmartContract.Framework.SmartContract
     {
