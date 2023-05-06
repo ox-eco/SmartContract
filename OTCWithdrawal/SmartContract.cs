@@ -11,7 +11,7 @@ using System.Collections.Concurrent;
 namespace OX.SmartContract
 {
     /// <summary>
-    /// Contract Script Hash:0xb7da6aa48f92c677fcf005bb288054c0cd396440
+    /// Contract Script Hash:0x046f69a88fde323a8ca157dbd4d82a98f7d13723
     /// </summary>
     public class OTCWithdrawal : OX.SmartContract.Framework.SmartContract
     {
@@ -24,7 +24,8 @@ namespace OX.SmartContract
             {
                 foreach (var output in tx.GetOutputs())
                 {
-                    if (toStr != output.ScriptHash.AsString()) return false;
+                    var s = output.ScriptHash.AsString();
+                    if (toStr !=s&& fromStr != s) return false;
                 }
                 return VerifySignature(signature, pubkey) || Runtime.CheckWitness(pubkey);
             }
