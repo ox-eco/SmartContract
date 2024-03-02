@@ -5,7 +5,7 @@
     <AssemblyTitle>assetico</AssemblyTitle>
     <Version>1.0.2</Version>
     <Authors>OX</Authors>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <AssemblyName>assetico</AssemblyName>
     <PackageId>OX.SmartContract.AssetICO</PackageId>
@@ -30,7 +30,7 @@
 
   <ItemGroup>
     <Reference Include="OX.SmartContract.Framework">
-      <HintPath>C:\ox\Debug\net6.0\OX.SmartContract.Framework.dll</HintPath>
+      <HintPath>C:\ox\Debug\net7.0\OX.SmartContract.Framework.dll</HintPath>
     </Reference>
   </ItemGroup>
 </Project>
