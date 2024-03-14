@@ -17,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EthereumTrust", "EthereumTr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OTCWithdrawal", "OTCWithdrawal\OTCWithdrawal.csproj", "{F163138D-D2D4-449A-9939-639C6ECAF790}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlashState", "FlashState\FlashState.csproj", "{51F65D88-C8AD-407E-BDE7-DEC49E1D917D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{F163138D-D2D4-449A-9939-639C6ECAF790}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F163138D-D2D4-449A-9939-639C6ECAF790}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F163138D-D2D4-449A-9939-639C6ECAF790}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51F65D88-C8AD-407E-BDE7-DEC49E1D917D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51F65D88-C8AD-407E-BDE7-DEC49E1D917D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51F65D88-C8AD-407E-BDE7-DEC49E1D917D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51F65D88-C8AD-407E-BDE7-DEC49E1D917D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
