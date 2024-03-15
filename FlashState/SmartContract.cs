@@ -11,7 +11,7 @@ using System.ComponentModel;
 namespace OX.SmartContract
 {
     /// <summary>
-    /// 0xb2c713e9272daaf7af0293456224aec7abdccf66
+    /// 0x22633905896e95036579f476f6fdfb05000264ab
     /// </summary>
     public class FlashState : Framework.SmartContract
     {
@@ -43,6 +43,8 @@ namespace OX.SmartContract
                     return AddBlackList((byte[])args[0]);
                 case "removeblacklist":
                     return RemoveBlackList((byte[])args[0]);
+                case "getblacklist":
+                    return GetBlackList();
                 default:
                     return false;
             }
