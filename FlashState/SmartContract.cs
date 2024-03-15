@@ -15,6 +15,15 @@ namespace OX.SmartContract
     /// </summary>
     public class FlashState : Framework.SmartContract
     {
+        [DisplayName("onRegister")]
+        public static event Action<string, byte[]> onRegister;
+        [DisplayName("onMark")]
+        public static event Action<byte[], byte[]> onMark;
+        [DisplayName("onAddBlackList")]
+        public static event Action<byte[]> onAddBlackList;
+        [DisplayName("onRemoveBlackList")]
+        public static event Action<byte[]> onRemoveBlackList;
+
         private static readonly byte[] Admin = "AWoTCyRFD5hC6Z5SwkV2y5284iH64p21Ck".ToScriptHash(); //Owner Address
         public static object Main(string operation, params object[] args)
         {
@@ -38,7 +47,8 @@ namespace OX.SmartContract
                     return false;
             }
         }
-        private static int GetFlashStateInterval(int balanceMultiple, int flashStateNumber, long totalOXSBalance)
+        [DisplayName("getFlashStateInterval")]
+        public static int GetFlashStateInterval(int balanceMultiple, int flashStateNumber, long totalOXSBalance)
         {
             if (balanceMultiple < 1) return 0;
             if (balanceMultiple >= 1000) return 2;
@@ -60,7 +70,8 @@ namespace OX.SmartContract
             else
                 return flashStateNumber < 1000 ? 2 : 10;
         }
-        private static bool Register(string domain, byte[] owner)
+        [DisplayName("register")]
+        public static bool Register(string domain, byte[] owner)
         {
             if (owner.Length != 20)
                 throw new InvalidOperationException("The parameters from and to SHOULD be 20-byte addresses.");
@@ -73,9 +84,11 @@ namespace OX.SmartContract
             domainSet.Put(domain, owner);
             StorageMap domainReverseSet = Storage.CurrentContext.CreateMap("domainreverseset");
             domainReverseSet.Put(owner, domain);
+            onRegister(domain, owner);
             return true;
         }
-        private static bool Mark(byte[] markdata, byte[] owner)
+        [DisplayName("mark")]
+        public static bool Mark(byte[] markdata, byte[] owner)
         {
             if (owner.Length != 20)
                 throw new InvalidOperationException("The parameters from and to SHOULD be 20-byte addresses.");
@@ -84,36 +97,56 @@ namespace OX.SmartContract
             if (length == 0 || length > 512) return false;
             StorageMap markset = Storage.CurrentContext.CreateMap("markset");
             markset.Put(owner, markdata);
+            onMark(markdata, owner);
             return true;
         }
-        private static bool AddBlackList(byte[] owner)
+        [DisplayName("addBlackList")]
+        public static bool AddBlackList(byte[] owner)
         {
             if (!Runtime.CheckWitness(Admin)) return false;
             if (owner.Length != 20)
                 throw new InvalidOperationException("The parameters from and to SHOULD be 20-byte addresses.");
             StorageMap blacklist = Storage.CurrentContext.CreateMap("blacklist");
-            byte[] value = blacklist.Get(owner);
+            var str = owner.AsString();
+            byte[] value = blacklist.Get(str);
             if (value != null) return false;
-            blacklist.Put(owner, [0]);
+            blacklist.Put(str, owner);
+            onAddBlackList(owner);
             return true;
         }
-        private static bool RemoveBlackList(byte[] owner)
+        [DisplayName("removeBlackList")]
+        public static bool RemoveBlackList(byte[] owner)
         {
             if (!Runtime.CheckWitness(Admin)) return false;
             if (owner.Length != 20)
                 throw new InvalidOperationException("The parameters from and to SHOULD be 20-byte addresses.");
             StorageMap blacklist = Storage.CurrentContext.CreateMap("blacklist");
-            byte[] value = blacklist.Get(owner);
+            var str = owner.AsString();
+            byte[] value = blacklist.Get(str);
             if (value == null) return false;
-            blacklist.Delete(owner);
+            blacklist.Delete(str);
+            onRemoveBlackList(owner);
             return true;
         }
+        [DisplayName("getBlackList")]
+        public static byte[] GetBlackList()
+        {
+            byte[] bs = new byte[0];
+            var result = Storage.Find("blacklist");
+            while (result.Next())
+            {
+                bs = bs.Concat(result.Value);
+            }
+            return bs;
+        }
+        [DisplayName("domainQuery")]
 
-        private static byte[] DomainQuery(string domain)
+        public static byte[] DomainQuery(string domain)
         {
             return Storage.CurrentContext.CreateMap("domainset").Get(domain);
         }
-        private static byte[] OwnerQuery(byte[] owner)
+        [DisplayName("ownerQuery")]
+        public static byte[] OwnerQuery(byte[] owner)
         {
             return Storage.CurrentContext.CreateMap("domainreverseset").Get(owner);
         }
