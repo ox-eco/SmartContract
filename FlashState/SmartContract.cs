@@ -11,7 +11,7 @@ using System.ComponentModel;
 namespace OX.SmartContract
 {
     /// <summary>
-    /// 0x161f5989fb959a11c9fbfeaa14ac9459ea6b1c9f
+    /// 0x29765c89a60805cda076ce201b2eae89e90e37ed
     /// </summary>
     public class FlashState : Framework.SmartContract
     {
@@ -30,7 +30,7 @@ namespace OX.SmartContract
             switch (operation)
             {
                 case "setintervalfunction":
-                    return SetIntervalFunction((byte[])args[0]);
+                    return SetIntervalFunction((byte[])args[0], (byte[])args[1]);
                 case "domainquery":
                     return DomainQuery((byte[])args[0]);
                 case "ownerquery":
@@ -49,11 +49,17 @@ namespace OX.SmartContract
                     return false;
             }
         }
-        public static bool SetIntervalFunction(byte[] scripthash)
+        public static bool SetIntervalFunction(byte[] multiple, byte[] scripthash)
         {
             if (!Runtime.CheckWitness(Admin)) return false;
+            if (multiple.Length != 1)
+                throw new InvalidOperationException("pool multiple invalid.");
+            var m = multiple[0];
+            if (m < 1 || m > 10)
+                throw new InvalidOperationException("pool multiple invalid.");
             StorageMap domainReverseSet = Storage.CurrentContext.CreateMap("intervalfunctionscripthash");
             domainReverseSet.Put(new byte[] { 0 }, scripthash);
+            domainReverseSet.Put(new byte[] { 1 }, multiple);
             return true;
         }
 

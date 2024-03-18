@@ -11,7 +11,7 @@ using System.ComponentModel;
 namespace OX.SmartContract
 {
     /// <summary>
-    /// 0x5e7cc60fba6bb7bd77c04f378435bb4dd52c512b
+    /// 0x80ca930c74f152a74f222249e8136a77873f3f84
     /// </summary>
     public class FlashStateInterval : Framework.SmartContract
     {
@@ -20,14 +20,14 @@ namespace OX.SmartContract
             switch (operation)
             {
                 case "getflashstateinterval":
-                    return GetFlashStateInterval((int)args[0], (int)args[1], (long)args[2]);
+                    return GetFlashStateInterval((int)args[0], (int)args[1], (int)args[2], (long)args[3]);
                 default:
                     return false;
             }
         }
 
         [DisplayName("getFlashStateInterval")]
-        public static int GetFlashStateInterval(int balanceMultiple, int flashStateNumber, long totalOXSBalance)
+        public static int GetFlashStateInterval(int txPoolCount, int balanceMultiple, int flashStateNumber, long totalOXSBalance)
         {
             return 0;
         }
