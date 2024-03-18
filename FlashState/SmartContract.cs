@@ -11,7 +11,7 @@ using System.ComponentModel;
 namespace OX.SmartContract
 {
     /// <summary>
-    /// 0x29765c89a60805cda076ce201b2eae89e90e37ed
+    /// 0x3659c921db003ab72aded7d98c4ea117622ecca2
     /// </summary>
     public class FlashState : Framework.SmartContract
     {
@@ -29,6 +29,8 @@ namespace OX.SmartContract
         {
             switch (operation)
             {
+                case "resetadmin":
+                    return ResetAdmin((byte[])args[0]);
                 case "setintervalfunction":
                     return SetIntervalFunction((byte[])args[0], (byte[])args[1]);
                 case "domainquery":
@@ -49,9 +51,37 @@ namespace OX.SmartContract
                     return false;
             }
         }
+        [DisplayName("resetadmin")]
+        public static bool ResetAdmin(byte[] newOwner)
+        {
+            StorageMap adminSet = Storage.CurrentContext.CreateMap("flashstateadmin");
+            byte[] value = adminSet.Get(new byte[] { 0 });
+            if (value != null) {
+                if (!Runtime.CheckWitness(value)) return false;
+            }
+            else
+            {
+                if (!Runtime.CheckWitness(Admin)) return false;
+            }
+            if (newOwner.Length != 20)
+                throw new InvalidOperationException("The parameters from and to SHOULD be 20-byte addresses.");
+            adminSet.Put(new byte[] { 0 }, newOwner);
+            return true;
+        }
+        [DisplayName("setintervalfunction")]
         public static bool SetIntervalFunction(byte[] multiple, byte[] scripthash)
         {
-            if (!Runtime.CheckWitness(Admin)) return false;
+            StorageMap adminSet = Storage.CurrentContext.CreateMap("flashstateadmin");
+            byte[] value = adminSet.Get(new byte[] { 0 });
+            if (value != null)
+            {
+                if (!Runtime.CheckWitness(value)) return false;
+            }
+            else
+            {
+                if (!Runtime.CheckWitness(Admin)) return false;
+            }
+
             if (multiple.Length != 1)
                 throw new InvalidOperationException("pool multiple invalid.");
             var m = multiple[0];
@@ -86,7 +116,16 @@ namespace OX.SmartContract
         {
             if (owner.Length != 20)
                 throw new InvalidOperationException("The parameters from and to SHOULD be 20-byte addresses.");
-            if (!Runtime.CheckWitness(owner)) return false;
+            StorageMap adminSet = Storage.CurrentContext.CreateMap("flashstateadmin");
+            byte[] value = adminSet.Get(new byte[] { 0 });
+            if (value != null)
+            {
+                if (!Runtime.CheckWitness(value)) return false;
+            }
+            else
+            {
+                if (!Runtime.CheckWitness(Admin)) return false;
+            }
             var length = markdata.Length;
             if (length == 0 || length > 512) return false;
             StorageMap markset = Storage.CurrentContext.CreateMap("markset");
@@ -98,13 +137,22 @@ namespace OX.SmartContract
         [DisplayName("addBlackList")]
         public static bool AddBlackList(byte[] owner)
         {
-            if (!Runtime.CheckWitness(Admin)) return false;
+            StorageMap adminSet = Storage.CurrentContext.CreateMap("flashstateadmin");
+            byte[] value = adminSet.Get(new byte[] { 0 });
+            if (value != null)
+            {
+                if (!Runtime.CheckWitness(value)) return false;
+            }
+            else
+            {
+                if (!Runtime.CheckWitness(Admin)) return false;
+            }
             if (owner.Length != 20)
                 throw new InvalidOperationException("The parameters from and to SHOULD be 20-byte addresses.");
             StorageMap blacklist = Storage.CurrentContext.CreateMap("blacklist");
             var str = owner.AsString();
-            byte[] value = blacklist.Get(str);
-            if (value != null) return false;
+            byte[] v = blacklist.Get(str);
+            if (v != null) return false;
             blacklist.Put(str, owner);
             onAddBlackList(owner);
             return true;
