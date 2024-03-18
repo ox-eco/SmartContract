@@ -11,7 +11,7 @@ using System.ComponentModel;
 namespace OX.SmartContract
 {
     /// <summary>
-    /// 0x3659c921db003ab72aded7d98c4ea117622ecca2
+    /// 0x3c8eed1e38d0e3d1a01dfde583851fd96c36603e
     /// </summary>
     public class FlashState : Framework.SmartContract
     {
@@ -32,7 +32,7 @@ namespace OX.SmartContract
                 case "resetadmin":
                     return ResetAdmin((byte[])args[0]);
                 case "setintervalfunction":
-                    return SetIntervalFunction((byte[])args[0], (byte[])args[1]);
+                    return SetIntervalFunction((int)args[0], (byte[])args[1]);
                 case "domainquery":
                     return DomainQuery((byte[])args[0]);
                 case "ownerquery":
@@ -54,7 +54,7 @@ namespace OX.SmartContract
         [DisplayName("resetadmin")]
         public static bool ResetAdmin(byte[] newOwner)
         {
-            StorageMap adminSet = Storage.CurrentContext.CreateMap("flashstateadmin");
+            StorageMap adminSet = Storage.CurrentContext.CreateMap("adm");
             byte[] value = adminSet.Get(new byte[] { 0 });
             if (value != null) {
                 if (!Runtime.CheckWitness(value)) return false;
@@ -63,15 +63,13 @@ namespace OX.SmartContract
             {
                 if (!Runtime.CheckWitness(Admin)) return false;
             }
-            if (newOwner.Length != 20)
-                throw new InvalidOperationException("The parameters from and to SHOULD be 20-byte addresses.");
             adminSet.Put(new byte[] { 0 }, newOwner);
             return true;
         }
         [DisplayName("setintervalfunction")]
-        public static bool SetIntervalFunction(byte[] multiple, byte[] scripthash)
+        public static bool SetIntervalFunction(int multiple, byte[] scripthash)
         {
-            StorageMap adminSet = Storage.CurrentContext.CreateMap("flashstateadmin");
+            StorageMap adminSet = Storage.CurrentContext.CreateMap("adm");
             byte[] value = adminSet.Get(new byte[] { 0 });
             if (value != null)
             {
@@ -81,13 +79,10 @@ namespace OX.SmartContract
             {
                 if (!Runtime.CheckWitness(Admin)) return false;
             }
-
-            if (multiple.Length != 1)
+          
+            if (multiple < 1 || multiple > 10)
                 throw new InvalidOperationException("pool multiple invalid.");
-            var m = multiple[0];
-            if (m < 1 || m > 10)
-                throw new InvalidOperationException("pool multiple invalid.");
-            StorageMap domainReverseSet = Storage.CurrentContext.CreateMap("intervalfunctionscripthash");
+            StorageMap domainReverseSet = Storage.CurrentContext.CreateMap("itv");
             domainReverseSet.Put(new byte[] { 0 }, scripthash);
             domainReverseSet.Put(new byte[] { 1 }, multiple);
             return true;
@@ -96,17 +91,15 @@ namespace OX.SmartContract
         [DisplayName("register")]
         public static bool Register(byte[] domain, byte[] owner)
         {
-            if (owner.Length != 20)
-                throw new InvalidOperationException("The parameters from and to SHOULD be 20-byte addresses.");
             if (!Runtime.CheckWitness(owner)) return false;
             var length = domain.Length;
             if (length < 6 || length > 20) return false;
-            StorageMap domainSet = Storage.CurrentContext.CreateMap("domainset");
+            StorageMap domainSet = Storage.CurrentContext.CreateMap("dms");
             byte[] value = domainSet.Get(domain);
             if (value != null) return false;
             var bs = owner.Concat(domain);
             domainSet.Put(domain, bs);
-            StorageMap domainReverseSet = Storage.CurrentContext.CreateMap("domainreverseset");
+            StorageMap domainReverseSet = Storage.CurrentContext.CreateMap("dmsr");
             domainReverseSet.Put(owner, bs);
             onRegister(domain, owner);
             return true;
@@ -114,21 +107,10 @@ namespace OX.SmartContract
         [DisplayName("mark")]
         public static bool Mark(byte[] markdata, byte[] owner)
         {
-            if (owner.Length != 20)
-                throw new InvalidOperationException("The parameters from and to SHOULD be 20-byte addresses.");
-            StorageMap adminSet = Storage.CurrentContext.CreateMap("flashstateadmin");
-            byte[] value = adminSet.Get(new byte[] { 0 });
-            if (value != null)
-            {
-                if (!Runtime.CheckWitness(value)) return false;
-            }
-            else
-            {
-                if (!Runtime.CheckWitness(Admin)) return false;
-            }
+            if (!Runtime.CheckWitness(owner)) return false;
             var length = markdata.Length;
             if (length == 0 || length > 512) return false;
-            StorageMap markset = Storage.CurrentContext.CreateMap("markset");
+            StorageMap markset = Storage.CurrentContext.CreateMap("mrk");
             var bs = owner.Concat(markdata);
             markset.Put(owner, bs);
             onMark(markdata, owner);
@@ -137,7 +119,7 @@ namespace OX.SmartContract
         [DisplayName("addBlackList")]
         public static bool AddBlackList(byte[] owner)
         {
-            StorageMap adminSet = Storage.CurrentContext.CreateMap("flashstateadmin");
+            StorageMap adminSet = Storage.CurrentContext.CreateMap("adm");
             byte[] value = adminSet.Get(new byte[] { 0 });
             if (value != null)
             {
@@ -147,9 +129,7 @@ namespace OX.SmartContract
             {
                 if (!Runtime.CheckWitness(Admin)) return false;
             }
-            if (owner.Length != 20)
-                throw new InvalidOperationException("The parameters from and to SHOULD be 20-byte addresses.");
-            StorageMap blacklist = Storage.CurrentContext.CreateMap("blacklist");
+            StorageMap blacklist = Storage.CurrentContext.CreateMap("bkl");
             var str = owner.AsString();
             byte[] v = blacklist.Get(str);
             if (v != null) return false;
@@ -160,13 +140,20 @@ namespace OX.SmartContract
         [DisplayName("removeBlackList")]
         public static bool RemoveBlackList(byte[] owner)
         {
-            if (!Runtime.CheckWitness(Admin)) return false;
-            if (owner.Length != 20)
-                throw new InvalidOperationException("The parameters from and to SHOULD be 20-byte addresses.");
-            StorageMap blacklist = Storage.CurrentContext.CreateMap("blacklist");
+            StorageMap adminSet = Storage.CurrentContext.CreateMap("adm");
+            byte[] value = adminSet.Get(new byte[] { 0 });
+            if (value != null)
+            {
+                if (!Runtime.CheckWitness(value)) return false;
+            }
+            else
+            {
+                if (!Runtime.CheckWitness(Admin)) return false;
+            }
+            StorageMap blacklist = Storage.CurrentContext.CreateMap("bkl");
             var str = owner.AsString();
-            byte[] value = blacklist.Get(str);
-            if (value == null) return false;
+            byte[] v = blacklist.Get(str);
+            if (v == null) return false;
             blacklist.Delete(str);
             onRemoveBlackList(owner);
             return true;
@@ -175,7 +162,7 @@ namespace OX.SmartContract
         public static byte[] GetBlackList()
         {
             byte[] bs = new byte[0];
-            var result = Storage.Find("blacklist");
+            var result = Storage.Find("bkl");
             while (result.Next())
             {
                 bs = bs.Concat(result.Value);
@@ -186,12 +173,12 @@ namespace OX.SmartContract
 
         public static byte[] DomainQuery(byte[] domain)
         {
-            return Storage.CurrentContext.CreateMap("domainset").Get(domain);
+            return Storage.CurrentContext.CreateMap("dms").Get(domain);
         }
         [DisplayName("ownerQuery")]
         public static byte[] OwnerQuery(byte[] owner)
         {
-            return Storage.CurrentContext.CreateMap("domainreverseset").Get(owner);
+            return Storage.CurrentContext.CreateMap("dmsr").Get(owner);
         }
 
     }
