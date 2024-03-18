@@ -19,6 +19,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OTCWithdrawal", "OTCWithdra
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlashState", "FlashState\FlashState.csproj", "{51F65D88-C8AD-407E-BDE7-DEC49E1D917D}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlashStateInterval", "FlashStateInterval\FlashStateInterval.csproj", "{0195D72B-E49E-4F28-A088-8CE26AE1FC5F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlashStateInterval-zero", "FlashStateInterval-Zero\FlashStateInterval-zero.csproj", "{EA61CACD-C326-4D9D-BCEC-1716A31D01B7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,6 +61,14 @@ Global
 		{51F65D88-C8AD-407E-BDE7-DEC49E1D917D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{51F65D88-C8AD-407E-BDE7-DEC49E1D917D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{51F65D88-C8AD-407E-BDE7-DEC49E1D917D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0195D72B-E49E-4F28-A088-8CE26AE1FC5F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0195D72B-E49E-4F28-A088-8CE26AE1FC5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0195D72B-E49E-4F28-A088-8CE26AE1FC5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0195D72B-E49E-4F28-A088-8CE26AE1FC5F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA61CACD-C326-4D9D-BCEC-1716A31D01B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA61CACD-C326-4D9D-BCEC-1716A31D01B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA61CACD-C326-4D9D-BCEC-1716A31D01B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA61CACD-C326-4D9D-BCEC-1716A31D01B7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

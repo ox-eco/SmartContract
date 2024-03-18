@@ -2,13 +2,13 @@
 
   <PropertyGroup>
     <Copyright>2024 OX</Copyright>
-    <AssemblyTitle>FlashState</AssemblyTitle>
+    <AssemblyTitle>FlashStateInterval-zero</AssemblyTitle>
     <Version>1.0.2</Version>
     <Authors>OX</Authors>
     <TargetFramework>net7.0</TargetFramework>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <AssemblyName>FlashState</AssemblyName>
-    <PackageId>OX.SmartContract.FlashState</PackageId>
+    <AssemblyName>FlashStateInterval-zero</AssemblyName>
+    <PackageId>OX.SmartContract.FlashStateInterval-zero</PackageId>
     <PackageTags></PackageTags>
     <PackageProjectUrl></PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -27,10 +27,6 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <OutputPath>c:\ox</OutputPath>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="SmartContract - 复制.cs" />
-  </ItemGroup>
 
   
 

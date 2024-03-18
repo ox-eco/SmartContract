@@ -11,12 +11,12 @@ using System.ComponentModel;
 namespace OX.SmartContract
 {
     /// <summary>
-    /// 0x22633905896e95036579f476f6fdfb05000264ab
+    /// 0x161f5989fb959a11c9fbfeaa14ac9459ea6b1c9f
     /// </summary>
     public class FlashState : Framework.SmartContract
     {
         [DisplayName("onRegister")]
-        public static event Action<string, byte[]> onRegister;
+        public static event Action<byte[], byte[]> onRegister;
         [DisplayName("onMark")]
         public static event Action<byte[], byte[]> onMark;
         [DisplayName("onAddBlackList")]
@@ -29,14 +29,14 @@ namespace OX.SmartContract
         {
             switch (operation)
             {
-                case "getflashstateinterval":
-                    return GetFlashStateInterval((int)args[0], (int)args[1], (long)args[2]);
+                case "setintervalfunction":
+                    return SetIntervalFunction((byte[])args[0]);
                 case "domainquery":
-                    return DomainQuery((string)args[0]);
+                    return DomainQuery((byte[])args[0]);
                 case "ownerquery":
                     return OwnerQuery((byte[])args[0]);
                 case "register":
-                    return Register((string)args[0], (byte[])args[1]);
+                    return Register((byte[])args[0], (byte[])args[1]);
                 case "mark":
                     return Mark((byte[])args[0], (byte[])args[1]);
                 case "addblacklist":
@@ -49,43 +49,29 @@ namespace OX.SmartContract
                     return false;
             }
         }
-        [DisplayName("getFlashStateInterval")]
-        public static int GetFlashStateInterval(int balanceMultiple, int flashStateNumber, long totalOXSBalance)
+        public static bool SetIntervalFunction(byte[] scripthash)
         {
-            if (balanceMultiple < 1) return 0;
-            if (balanceMultiple >= 1000) return 2;
-            if (balanceMultiple >= 100)
-            {
-                return flashStateNumber > 5000 ? 10 : 2;
-            }
-            if (balanceMultiple >= 10)
-            {
-                if (flashStateNumber < 1000) return 2;
-                else if (flashStateNumber < 5000) return 10;
-                else return 100;
-            }
-            if (flashStateNumber == 0 || flashStateNumber > 5000) return 0;
-            var k = totalOXSBalance / 10000;
-            if (k > 100_000_000L * 5000) return 0;
-            if (k > 100_000_000L * 2000)
-                return flashStateNumber < 1000 ? 10 : 100;
-            else
-                return flashStateNumber < 1000 ? 2 : 10;
+            if (!Runtime.CheckWitness(Admin)) return false;
+            StorageMap domainReverseSet = Storage.CurrentContext.CreateMap("intervalfunctionscripthash");
+            domainReverseSet.Put(new byte[] { 0 }, scripthash);
+            return true;
         }
+
         [DisplayName("register")]
-        public static bool Register(string domain, byte[] owner)
+        public static bool Register(byte[] domain, byte[] owner)
         {
             if (owner.Length != 20)
                 throw new InvalidOperationException("The parameters from and to SHOULD be 20-byte addresses.");
             if (!Runtime.CheckWitness(owner)) return false;
             var length = domain.Length;
-            if (length < 3 || length > 20) return false;
+            if (length < 6 || length > 20) return false;
             StorageMap domainSet = Storage.CurrentContext.CreateMap("domainset");
             byte[] value = domainSet.Get(domain);
             if (value != null) return false;
-            domainSet.Put(domain, owner);
+            var bs = owner.Concat(domain);
+            domainSet.Put(domain, bs);
             StorageMap domainReverseSet = Storage.CurrentContext.CreateMap("domainreverseset");
-            domainReverseSet.Put(owner, domain);
+            domainReverseSet.Put(owner, bs);
             onRegister(domain, owner);
             return true;
         }
@@ -98,7 +84,8 @@ namespace OX.SmartContract
             var length = markdata.Length;
             if (length == 0 || length > 512) return false;
             StorageMap markset = Storage.CurrentContext.CreateMap("markset");
-            markset.Put(owner, markdata);
+            var bs = owner.Concat(markdata);
+            markset.Put(owner, bs);
             onMark(markdata, owner);
             return true;
         }
@@ -143,7 +130,7 @@ namespace OX.SmartContract
         }
         [DisplayName("domainQuery")]
 
-        public static byte[] DomainQuery(string domain)
+        public static byte[] DomainQuery(byte[] domain)
         {
             return Storage.CurrentContext.CreateMap("domainset").Get(domain);
         }
