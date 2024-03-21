@@ -11,7 +11,7 @@ using System.ComponentModel;
 namespace OX.SmartContract
 {
     /// <summary>
-    /// 0xaae5f82a9797ecd43038949ec625be4008cc0eab
+    /// 0x55850337ae5372dc1dfdf3c94de7f03c9d0dc3ab
     /// </summary>
     public class FlashState : Framework.SmartContract
     {
@@ -85,7 +85,7 @@ namespace OX.SmartContract
 
             if (multiple < 1 || multiple > 10)
                 throw new InvalidOperationException("pool multiple invalid.");
-            if (listKind < 0 || listKind > 1)
+            if (listKind < 1 || listKind > 2)
                 throw new InvalidOperationException("listKind invalid.");
             StorageMap domainReverseSet = Storage.CurrentContext.CreateMap("itv");
             domainReverseSet.Put(new byte[] { 0 }, scripthash);
