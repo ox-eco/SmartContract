@@ -11,7 +11,7 @@ using System.ComponentModel;
 namespace OX.SmartContract
 {
     /// <summary>
-    /// 0x55850337ae5372dc1dfdf3c94de7f03c9d0dc3ab
+    /// 0xdadf55efc35334d438897ae6bf8f5ea51d2ef5f5
     /// </summary>
     public class FlashState : Framework.SmartContract
     {
@@ -36,7 +36,7 @@ namespace OX.SmartContract
                 case "resetadmin":
                     return ResetAdmin((byte[])args[0], (byte[])args[1]);
                 case "setintervalfunction":
-                    return SetIntervalFunction((int)args[0], (int)args[1], (byte[])args[2]);
+                    return SetIntervalFunction((int)args[0],(int)args[1], (int)args[2], (byte[])args[3]);
                 case "domainquery":
                     return DomainQuery((byte[])args[0]);
                 case "ownerquery":
@@ -74,7 +74,7 @@ namespace OX.SmartContract
             return true;
         }
         [DisplayName("setintervalfunction")]
-        public static bool SetIntervalFunction(int listKind, int multiple, byte[] scripthash)
+        public static bool SetIntervalFunction(int sizeMultiple,int listKind, int multiple, byte[] scripthash)
         {
             StorageMap adminSet = Storage.CurrentContext.CreateMap("adm");
             bool ok = false;
@@ -91,6 +91,7 @@ namespace OX.SmartContract
             domainReverseSet.Put(new byte[] { 0 }, scripthash);
             domainReverseSet.Put(new byte[] { 1 }, multiple);
             domainReverseSet.Put(new byte[] { 2 }, listKind);
+            domainReverseSet.Put(new byte[] { 3 }, sizeMultiple);
             return true;
         }
 
