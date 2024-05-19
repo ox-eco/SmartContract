@@ -11,7 +11,7 @@ using System.Collections.Concurrent;
 namespace OX.SmartContract
 {
     /// <summary>
-    /// Contract Script Hash:0x8a783ae5385f7e534ae1644d78e0d8144a984600
+    /// Contract Script Hash:0x789ee733b58932b97dc960260ca1647dfcb8808a
     /// </summary>
     public class OutputRestriction : OX.SmartContract.Framework.SmartContract
     {
@@ -59,7 +59,7 @@ namespace OX.SmartContract
                         ok = true;
                         break;
                     }
-                    else if (Blockchain.IsInSide(output.ScriptHash, sideScopes.Range(p * 20, 20), "0xef30ec8e833e8c828f4f20c690e607790897dfec"))
+                    else if (Blockchain.IsInSide(output.ScriptHash, sideScopes.Range(p * 20, 20), "0x83f4036ded80cce463ae81e02328fc3e028ac892"))
                     {
                         ok = true;
                         break;

@@ -4,14 +4,15 @@ using System;
 namespace OX.SmartContract
 {
     /// <summary>
-    /// Contract Script Hash:0xef30ec8e833e8c828f4f20c690e607790897dfec
+    /// Contract Script Hash:0x83f4036ded80cce463ae81e02328fc3e028ac892
     /// </summary>
     public class AssetMerge : OX.SmartContract.Framework.SmartContract
     {
-        public static bool Main(int SideType, byte[] Data, int Flag, byte[] pubkey, byte[] signature)
+        public static bool Main(int Channel, int SideType, byte[] Data, int Flag, byte[] pubkey, byte[] signature)
         {
-            if (!Blockchain.VerifySlotPubKey(pubkey)) return false;
-            return VerifySignature(signature, pubkey) || Runtime.CheckWitness(pubkey);
+            var ok = VerifySignature(signature, pubkey) || Runtime.CheckWitness(pubkey);
+            if (ok) return Blockchain.VerifySlotPubKey(pubkey);
+            return false;
         }
     }
 }
