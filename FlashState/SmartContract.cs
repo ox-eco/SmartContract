@@ -7,11 +7,12 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Text.RegularExpressions;
 
 namespace OX.SmartContract
 {
     /// <summary>
-    /// 0xdadf55efc35334d438897ae6bf8f5ea51d2ef5f5
+    /// 0xdb846839cfcfbbd25af6f19478974360a9396989
     /// </summary>
     public class FlashState : Framework.SmartContract
     {
@@ -36,7 +37,7 @@ namespace OX.SmartContract
                 case "resetadmin":
                     return ResetAdmin((byte[])args[0], (byte[])args[1]);
                 case "setintervalfunction":
-                    return SetIntervalFunction((int)args[0],(int)args[1], (int)args[2], (byte[])args[3]);
+                    return SetIntervalFunction((int)args[0], (int)args[1], (int)args[2], (byte[])args[3]);
                 case "domainquery":
                     return DomainQuery((byte[])args[0]);
                 case "ownerquery":
@@ -74,7 +75,7 @@ namespace OX.SmartContract
             return true;
         }
         [DisplayName("setintervalfunction")]
-        public static bool SetIntervalFunction(int sizeMultiple,int listKind, int multiple, byte[] scripthash)
+        public static bool SetIntervalFunction(int sizeMultiple, int listKind, int multiple, byte[] scripthash)
         {
             StorageMap adminSet = Storage.CurrentContext.CreateMap("adm");
             bool ok = false;
@@ -83,10 +84,8 @@ namespace OX.SmartContract
             if (!ok) ok = Runtime.CheckWitness(Admin);
             if (!ok) return false;
 
-            if (multiple < 1 || multiple > 10)
-                throw new InvalidOperationException("pool multiple invalid.");
-            if (listKind < 1 || listKind > 2)
-                throw new InvalidOperationException("listKind invalid.");
+            if (multiple < 1 || multiple > 10) return false;
+            if (listKind < 1 || listKind > 2) return false;
             StorageMap domainReverseSet = Storage.CurrentContext.CreateMap("itv");
             domainReverseSet.Put(new byte[] { 0 }, scripthash);
             domainReverseSet.Put(new byte[] { 1 }, multiple);
@@ -101,6 +100,8 @@ namespace OX.SmartContract
             if (!Runtime.CheckWitness(owner)) return false;
             var length = domain.Length;
             if (length < 6 || length > 20) return false;
+            var dm = domain.AsString();
+            if (!dm.RegexIsMatch(@"^[a-z0-9_-]+$")) return false;
             StorageMap domainSet = Storage.CurrentContext.CreateMap("dms");
             byte[] value = domainSet.Get(domain);
             if (value != null) return false;
