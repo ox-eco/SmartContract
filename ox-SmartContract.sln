@@ -25,6 +25,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlashStateInterval-zero", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Side", "Side\Side.csproj", "{17529654-430F-4676-9D54-5B3BA6884D08}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MutualLock", "MutualLock\MutualLock.csproj", "{B882918F-9316-4297-AEF1-17D9A2F9F2C7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -75,6 +77,10 @@ Global
 		{17529654-430F-4676-9D54-5B3BA6884D08}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{17529654-430F-4676-9D54-5B3BA6884D08}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{17529654-430F-4676-9D54-5B3BA6884D08}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B882918F-9316-4297-AEF1-17D9A2F9F2C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B882918F-9316-4297-AEF1-17D9A2F9F2C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B882918F-9316-4297-AEF1-17D9A2F9F2C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B882918F-9316-4297-AEF1-17D9A2F9F2C7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
