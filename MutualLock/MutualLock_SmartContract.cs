@@ -12,14 +12,14 @@ using OX.SmartContract.Framework.Services.System;
 namespace OX.SmartContract
 {
     /// <summary>
-    /// Contract Script Hash:0xf59ba20499ee694f2134a171e619499cab224aa8
+    /// Contract Script Hash:0x6f8d9351404d12a587eafd2572dd8aaa5ca85423
     /// </summary>
     public class MutualLockContract : OX.SmartContract.Framework.SmartContract
     {
         public static bool Main(uint lockExpiration, uint Amount, byte[] approveHash, byte[] assetId, byte[] buyerPubKey, byte[] sellerPubKey, byte[] arbiterPubkey, byte[] signature)
         {
             if (VerifySignature(signature, arbiterPubkey) || Runtime.CheckWitness(arbiterPubkey)) return true;
-            var selfSH = OX.SmartContract.Framework.Services.System.ExecutionEngine.ExecutingScriptHash;
+            var selfSH = OX.SmartContract.Framework.Services.System.ExecutionEngine.EntryScriptHash;
             Transaction tx = OX.SmartContract.Framework.Services.System.ExecutionEngine.ScriptContainer as Transaction;
             string sh = "";
             foreach (var refer in tx.GetReferences())
@@ -36,7 +36,7 @@ namespace OX.SmartContract
                     return false;
                 }
             }
-            //if (selfSH.AsString() != sh) return false;
+            if (selfSH.AsString() != sh) return false;
 
             bool approved = false;
             foreach (var attr in tx.GetAttributes())
