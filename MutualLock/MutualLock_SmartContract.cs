@@ -12,7 +12,7 @@ using OX.SmartContract.Framework.Services.System;
 namespace OX.SmartContract
 {
     /// <summary>
-    /// Contract Script Hash:0xd5b2b80d0a174ad67cdb2e0ff6f0d9da56aba5f5
+    /// Contract Script Hash:0xf59ba20499ee694f2134a171e619499cab224aa8
     /// </summary>
     public class MutualLockContract : OX.SmartContract.Framework.SmartContract
     {
@@ -36,7 +36,7 @@ namespace OX.SmartContract
                     return false;
                 }
             }
-            if (selfSH.AsString() != sh) return false;
+            //if (selfSH.AsString() != sh) return false;
 
             bool approved = false;
             foreach (var attr in tx.GetAttributes())
@@ -58,30 +58,31 @@ namespace OX.SmartContract
 
             Header header = Blockchain.GetHeader(Blockchain.GetHeight());
             var ts = header.Timestamp;
-        
-            var isLocked = Blockchain.GetMutualLockState(selfSH);
 
-            if (ts > lockExpiration && !isLocked) 
+            var isLocked = Blockchain.GetMutualLockState(selfSH);
+            bool ok = false;
+            if (ts > lockExpiration && !isLocked)
             {
-                return VerifySignature(signature, sellerPubKey) || Runtime.CheckWitness(sellerPubKey);
+                if (VerifySignature(signature, sellerPubKey) || Runtime.CheckWitness(sellerPubKey)) ok = true;
             }
-            else
+            if (!ok)
             {
                 var buyerSigned = VerifySignature(signature, buyerPubKey) || Runtime.CheckWitness(buyerPubKey);
-                if (!buyerSigned) return false;
-                bool amountOk = false;
-                foreach (var output in tx.GetOutputs())
+                if (buyerSigned)
                 {
-                    if (output.AssetId.AsString() == assetId.AsString()
-                         && output.ScriptHash.AsString() == seller_sh.AsString()
-                         && output.Value >= 100_000_000 * Amount)
+                    foreach (var output in tx.GetOutputs())
                     {
-                        amountOk = true;
-                        break;
+                        if (output.AssetId.AsString() == assetId.AsString()
+                             && output.ScriptHash.AsString() == seller_sh.AsString()
+                             && output.Value >= 100_000_000 * Amount)
+                        {
+                            ok = true;
+                            break;
+                        }
                     }
                 }
-                return amountOk;
             }
+            return ok;
         }
     }
 }
