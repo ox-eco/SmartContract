@@ -12,7 +12,9 @@ using OX.SmartContract.Framework.Services.System;
 namespace OX.SmartContract
 {
     /// <summary>
-    /// Contract Script Hash:0x6f8d9351404d12a587eafd2572dd8aaa5ca85423
+    /// Contract Script Hash:0xc2e87efec3a16b5f5f1c4a1dbea2ed2b6072a4df
+    /// arg:0202040406060600
+    /// return:01
     /// </summary>
     public class MutualLockContract : OX.SmartContract.Framework.SmartContract
     {
@@ -37,47 +39,54 @@ namespace OX.SmartContract
                 }
             }
             if (selfSH.AsString() != sh) return false;
-
-            bool approved = false;
-            foreach (var attr in tx.GetAttributes())
-            {
-                if (attr.Usage == 0xae)
-                {
-                    if (Blockchain.VerifyApproveHash(approveHash, attr.Data))
-                    {
-                        approved = true;
-                        break;
-                    }
-                }
-            }
-            if (!approved) return false;
-
-
-            var seller_sh = Runtime.CreateSignatureRedeemScriptHash(sellerPubKey);
+         
             var buyer_sh = Runtime.CreateSignatureRedeemScriptHash(buyerPubKey);
 
             Header header = Blockchain.GetHeader(Blockchain.GetHeight());
             var ts = header.Timestamp;
+            var expire = ts > lockExpiration;
 
             var isLocked = Blockchain.GetMutualLockState(selfSH);
+       
             bool ok = false;
-            if (ts > lockExpiration && !isLocked)
+          
+
+            var sellerSigned = VerifySignature(signature, sellerPubKey) || Runtime.CheckWitness(sellerPubKey);
+            if (isLocked)
             {
-                if (VerifySignature(signature, sellerPubKey) || Runtime.CheckWitness(sellerPubKey)) ok = true;
-            }
-            if (!ok)
-            {
-                var buyerSigned = VerifySignature(signature, buyerPubKey) || Runtime.CheckWitness(buyerPubKey);
-                if (buyerSigned)
+                if (sellerSigned)
                 {
                     foreach (var output in tx.GetOutputs())
                     {
                         if (output.AssetId.AsString() == assetId.AsString()
-                             && output.ScriptHash.AsString() == seller_sh.AsString()
-                             && output.Value >= 100_000_000 * Amount)
+                             && output.ScriptHash.AsString() == buyer_sh.AsString()
+                             && output.Value >=2* 100_000_000 * Amount)
                         {
                             ok = true;
                             break;
+                        }
+                    }
+                }
+            }           
+            else
+            {
+                if (expire)
+                {
+                    if (sellerSigned) ok = true;
+                }
+                else
+                {
+                    if (sellerSigned)
+                    {
+                        foreach (var output in tx.GetOutputs())
+                        {
+                            if (output.AssetId.AsString() == assetId.AsString()
+                                 && output.ScriptHash.AsString() == buyer_sh.AsString()
+                                 && output.Value >= 100_000_000 * Amount)
+                            {
+                                ok = true;
+                                break;
+                            }
                         }
                     }
                 }
